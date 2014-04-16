@@ -36,7 +36,7 @@ function! gazetteer#WhereAmI(buf_num)
             let file = bufname(target_buf_num)
             let istmpfile = 0
         endif
-        let cmdline = 'ctags -f - --fields=Ks --excmd=num -u --language-force='
+        let cmdline = 'ctags -f - --fields=ks --excmd=num -u --language-force='
         if getbufvar(target_buf_num, "&filetype") == 'cpp'
             let cmdline .= 'c++'
         else
@@ -56,7 +56,21 @@ function! gazetteer#WhereAmI(buf_num)
                 else
                     let kind = ""
                 endif
-                if kind != "namespace" && kind != "variable"
+                " c  classes
+                " d  macro definitions
+                " e  enumerators (values inside an enumeration)
+                " f  function definitions
+                " g  enumeration names
+                " l  local variables
+                " m  class, struct, and union members
+                " n  namespaces
+                " p  function prototypes
+                " s  structure names
+                " t  typedefs
+                " u  union names
+                " v  variable definitions
+                " x  external and forward variable declarations
+                if (kind == "" || kind == "c" || kind == "f" || kind == "g" || kind == "m" || kind == "s" || kind == "u")
                     let tag = a[0]
                     if len(a) > 4
                         let scope = substitute(a[4], '^[^:]*:', '', '')
