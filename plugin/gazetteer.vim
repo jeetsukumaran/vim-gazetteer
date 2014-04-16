@@ -10,8 +10,15 @@ if has('autocmd')
   augroup END
 endif
 
+command! -nargs=? CtrlPGazetteer :call ctrlp#gazetteer#gazetteer(<q-args>)
 nnoremap <silent> <Plug>GazetteerEchoLocation :call gazetteer#GazetteerEchoLocation()<CR>
+nnoremap <silent> <Plug>CtrlPGazetteer :CtrlPGazetteer<CR>
 
-if ( (!exists("g:gazetteer_suppress_keymaps") || !g:gazetter_suppress_keymaps) && !hasmapto("<Plug>GazetteerEchoLocation", "n") )
-    nmap gG <Plug>GazetteerEchoLocation
+if ( (!exists("g:gazetteer_suppress_keymaps") || !g:gazetteer_suppress_keymaps)  )
+    if !hasmapto("<Plug>CtrlPGazetteer", "n")
+        nmap gG <Plug>GazetteerEchoLocation
+    endif
+    if !hasmapto("<Plug>GazetteerEchoLocation", "n")
+        nmap g@ <Plug>CtrlPGazetteer
+    endif
 endif

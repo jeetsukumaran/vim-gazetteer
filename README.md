@@ -2,11 +2,31 @@ Gazetteer
 =========
 
 Semantic location information for [Vim](http://www.vim.org).
-Typing '``gG``' will print the (scoped) name of the function, method, class, etc.
+
+Typing '``gG``' will echo the (scoped) name of the function, method, class, etc.
 of the current cursor position.
 
-Requires [Exuberant Ctags](http://ctags.sourceforge.net/) to be installed and
+If the [Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
+[Vim](http://www.vim.org)  is installed, then typing '``g@``' or the command
+'``CtrlPGazetteer``' will invoke fuzzy-finding-and-jumping for tags of the
+current buffer.
+
+Mandatory Prerequisites
+-----------------------
+
+[Exuberant Ctags](http://ctags.sourceforge.net/) to be installed and
 available on the system path.
+
+Optional Prerequisites
+----------------------
+[Ctrl-P](https://github.com/kien/ctrlp.vim) to enable fuzzy-searching and
+navigation of buffer tags.
+_Gazetteer_ also provides an extension for the
+[Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
+[Vim](http://www.vim.org).  [Ctrl-P](https://github.com/kien/ctrlp.vim) ships
+with a tag finder built-in, but this requires external management of a tags
+file. _Gazetteer_ avoids this by implementing dynamic, on-demand
+buffer-specific tag generation.
 
 Installation
 ------------
@@ -30,14 +50,29 @@ Add the line below into your _.vimrc_.
 Copy the _autoload_ and _plugin_ sub-directories to your _.vim_ directory (on
 Windows: _vimfiles_).
 
+Activating the Ctrl-P Extension
+-------------------------------
+
+To enable the [Ctrl-P](https://github.com/kien/ctrlp.vim) extension, add
+*gazetteer* to the variable `g:ctrlp_extensions` in your _.vimrc_:
+
+    let g:ctrlp_extensions = ['gazetteer']
+
 Key Maps
 --------
 
-By default, typing ``gG`` will print the name of the current code entity
+By default, typing '``gG``' will print the name of the current code entity
 in the message area. If you want to use another key-mapping to invoke this,
-then define it in your '_.vimrc_' . For example:
+then define it in your '_.vimrc_'  by, for example:
 
     nmap <Leader>g <Plug>GazetteerEchoLocation
+
+By default, typing '``g@``' will invoke
+[Ctrl-P](https://github.com/kien/ctrlp.vim) to search for and, if selected, go
+to, tags in the current buffer. If you want to use another key-mapping to
+invoke this, then define it in your '_.vimrc_' by, for example:
+
+    nmap <Leader>G <Plug>CtrlPGazetteer
 
 License
 -------
