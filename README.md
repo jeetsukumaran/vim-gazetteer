@@ -2,7 +2,7 @@ Gazetteer
 =========
 
 Semantic location information for [Vim](http://www.vim.org).
-Typing '``\g``' will print the (scoped) name of the function, method, class, etc.
+Typing '``gG``' will print the (scoped) name of the function, method, class, etc.
 of the current cursor position.
 
 Requires [Exuberant Ctags](http://ctags.sourceforge.net/) to be installed and
@@ -33,11 +33,11 @@ Windows: _vimfiles_).
 Key Maps
 --------
 
-By default, typing ``<Leader>g`` will print the name of the current code entity
+By default, typing ``gG`` will print the name of the current code entity
 in the message area. If you want to use another key-mapping to invoke this,
 then define it in your '_.vimrc_' . For example:
 
-    nmap g@ <Plug>GazetteerEchoLocation
+    nmap <Leader>g <Plug>GazetteerEchoLocation
 
 License
 -------

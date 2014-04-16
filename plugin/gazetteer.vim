@@ -13,5 +13,5 @@ endif
 nnoremap <silent> <Plug>GazetteerEchoLocation :call gazetteer#GazetteerEchoLocation()<CR>
 
 if ( (!exists("g:gazetteer_suppress_keymaps") || !g:gazetter_suppress_keymaps) && !hasmapto("<Plug>GazetteerEchoLocation", "n") )
-    nmap <Leader>g <Plug>GazetteerEchoLocation
+    nmap gG <Plug>GazetteerEchoLocation
 endif

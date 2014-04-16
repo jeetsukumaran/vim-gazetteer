@@ -24,7 +24,7 @@ function! s:_whereami()
             let file = expand("%")
             let istmpfile = 0
         endif
-        let cmdline = 'ctags -f - --fields=ks --excmd=num -u --language-force='
+        let cmdline = 'ctags -f - --fields=Ks --excmd=num -u --language-force='
         if &filetype == 'cpp'
             let cmdline .= 'c++'
         else
@@ -48,29 +48,30 @@ function! s:_whereami()
                     endif
                     let tag = join(scopes, scope_resolution_operator).scope_resolution_operator.tag
                 endif
-                if len(a) > 3
-                    let kind = a[3]
-                    if kind == 'c'
-                        let tag = "class ".tag
-                    elseif kind == 'f'
-                        let tag = tag."()"
-                    elseif kind == 'm'
-                    elseif kind == 'g'
-                        let tag = "enum ".tag
-                    elseif kind == 'n'
-                        let tag = "namespace ".tag
-                    elseif kind == 's'
-                        let tag = "struct ".tag
-                    elseif kind == 'u'
-                        let tag = "union ".tag
-                    elseif kind == 'i'
-                        let tag = "import ".tag
-                    elseif kind == 'v'
-                        let tag = "variable ".tag
-                    else
-                        throw 'unhandled kind: ' . kind
-                    endif
-                endif
+                " if len(a) > 3
+                "     let kind = a[3]
+                "     let tag = kind . " " . tag
+                    " if kind == 'c'
+                    "     let tag = "class ".tag
+                    " elseif kind == 'f'
+                    "     let tag = tag."()"
+                    " elseif kind == 'm'
+                    " elseif kind == 'g'
+                    "     let tag = "enum ".tag
+                    " elseif kind == 'n'
+                    "     let tag = "namespace ".tag
+                    " elseif kind == 's'
+                    "     let tag = "struct ".tag
+                    " elseif kind == 'u'
+                    "     let tag = "union ".tag
+                    " elseif kind == 'i'
+                    "     let tag = "import ".tag
+                    " elseif kind == 'v'
+                    "     let tag = "variable ".tag
+                    " else
+                    "     throw 'unhandled kind: ' . kind
+                    " endif
+                " endif
                 call add(b:gazetteer_tags, [substitute(a[2], ';"', '', ''), tag])
             endif
         endfor
@@ -97,12 +98,19 @@ function! s:_whereami()
     if lb > 0 && b:gazetteer_tags[lb-1][0] < curline
         return b:gazetteer_tags[lb-1][1]
     endif
-    return "(completely lost)"
+    return ""
 endfun
 
 function! gazetteer#GazetteerEchoLocation()
     let posv = getpos(".")
-    echo s:_whereami() . '   ("' . expand('%:t') . '", Line ' . string(posv[1]) . ', Column ' . string(posv[2]) . ')'
+    let file_loc = '"' . expand('%:t') . '", Line ' . string(posv[1]) . ', Column ' . string(posv[2])
+    let tag_name = s:_whereami()
+    if empty(tag_name)
+        let response = file_loc
+    else
+        let response = tag_name . " (" . file_loc . ")"
+    endif
+    echo response
 endfunction
 
 let &cpo = s:save_cpo
