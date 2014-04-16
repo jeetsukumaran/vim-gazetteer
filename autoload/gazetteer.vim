@@ -56,7 +56,7 @@ function! gazetteer#WhereAmI(buf_num)
                 else
                     let kind = ""
                 endif
-                if kind != "namespace"
+                if kind != "namespace" && kind != "variable"
                     let tag = a[0]
                     if len(a) > 4
                         let scope = substitute(a[4], '^[^:]*:', '', '')
