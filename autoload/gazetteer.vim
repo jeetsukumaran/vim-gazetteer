@@ -1,3 +1,5 @@
+" Inspired by and including code derived from:
+"   https://github.com/mklein-de/_vimfiles/blob/master/autoload/whereami.vi
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -5,28 +7,11 @@ let s:scope_resolution_operator_map = {
             \ "python" : "."
             \ }
 
-" based on: https://github.com/mklein-de/_vimfiles/blob/master/autoload/whereami.vim
-function! gazetteer#WhereAmI(buf_num)
-    let posv = getpos(a:buf_num)
+" Adds a buffer variable, 'b:gazetteer_tags' that is a list of tuples, with
+" the first element being the line number of a tag and the second element the
+" tag definition
+function! gazetteer#BuildBufferTagIndex(buf_num)
     let target_buf_num = a:buf_num
-
-    " let old_lazyredraw = &lazyredraw
-    " set lazyredraw
-    " let savebuf = bufnr("%")
-    " execute "keepjumps keepalt buffer " . string(target_buf_num)
-    let curline = line(".")
-    " execute "keepjumps keepalt buffer " . string(savebuf)
-    " let &lazyredraw = old_lazyredraw
-    " return
-
-    " if &cindent
-    "     let curline = searchpair('{', '', '}', 'cbnW')
-    "     if curline == 0
-    "         return "(no scope)"
-    "     endif
-    " else
-    "     let curline = line(".")
-    " endif
     if getbufvar(target_buf_num, "gazetteer_last_change", -1) != changenr()
         if &modified
             let file = tempname()
@@ -90,7 +75,13 @@ function! gazetteer#WhereAmI(buf_num)
         call setbufvar(target_buf_num, "gazetteer_tags", gazetteer_tags)
         call setbufvar(target_buf_num, "gazetteer_last_change", changenr())
     endif
-    let gazetteer_tags = getbufvar(target_buf_num, "gazetteer_tags", [])
+endfunction
+
+function! gazetteer#WhereAmI()
+    let curline = line(".")
+    call gazetteer#BuildBufferTagIndex(bufnr("%"))
+    " let gazetteer_tags = getbufvar(target_buf_num, "gazetteer_tags", [])
+    let gazetteer_tags = b:gazetteer_tags
     let lb = 0
     let ub = len(gazetteer_tags)
     while ub > lb
@@ -115,7 +106,7 @@ endfun
 function! gazetteer#GazetteerEchoLocation()
     let posv = getpos(".")
     let file_loc = '"' . expand('%:t') . '", Line ' . string(posv[1]) . ', Column ' . string(posv[2])
-    let tag_name = gazetteer#WhereAmI(bufnr("%"))
+    let tag_name = gazetteer#WhereAmI()
     if empty(tag_name)
         let response = file_loc
     else

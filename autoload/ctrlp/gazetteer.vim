@@ -44,7 +44,7 @@ endif
 "
 " Return: command
 function! ctrlp#gazetteer#init(buf_num)
-  call gazetteer#WhereAmI(a:buf_num)
+  call gazetteer#BuildBufferTagIndex(a:buf_num)
   let s:gazetteer_ctrlp_tag_list = []
   let s:gazetteer_ctrlp_tag_map = {}
   for item in getbufvar(a:buf_num, "gazetteer_tags", [])
