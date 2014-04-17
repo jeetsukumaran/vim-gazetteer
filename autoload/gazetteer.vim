@@ -90,8 +90,8 @@ function! gazetteer#WhereAmI(buf_num)
         call setbufvar(target_buf_num, "gazetteer_tags", gazetteer_tags)
         call setbufvar(target_buf_num, "gazetteer_last_change", changenr())
     endif
-    let lb = 0
     let gazetteer_tags = getbufvar(target_buf_num, "gazetteer_tags", [])
+    let lb = 0
     let ub = len(gazetteer_tags)
     while ub > lb
         let tagnum = (lb + ub) / 2
