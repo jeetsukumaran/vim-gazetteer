@@ -34,16 +34,16 @@ Installation
 ### [pathogen.vim](https://github.com/tpope/vim-pathogen)
 
     $ cd ~/.vim/bundle
-    $ git clone git://github.com/tacahiroy/ctrlp-pythonic.git
+    $ git clone git://github.com/jeetsukumaran/vim-gazetteer.git
 
 
 ### [Vundle](https://github.com/gmarik/vundle.git)
 
-    :BundleInstall jeetsukumaran/ctrlp-funky
+    :BundleInstall jeetsukumaran/vim-gazetteer
 
 Add the line below into your _.vimrc_.
 
-    Bundle 'jeetsukumaran/ctrlp-pythonic'
+    Bundle 'jeetsukumaran/vim-gazetteer'
 
 ### Manually
 
