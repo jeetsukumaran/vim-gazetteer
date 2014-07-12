@@ -7,7 +7,7 @@ Typing '``gG``' will echo the (scoped) name of the function, method, class, etc.
 of the current cursor position.
 
 If the [Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
-[Vim](http://www.vim.org)  is installed, then typing '``g@``' or the command
+[Vim](http://www.vim.org)  is installed, then typing '``g.``' or the command
 '``CtrlPGazetteer``' will invoke fuzzy-finding-and-jumping for tags of the
 current buffer.
 
