@@ -74,6 +74,27 @@ invoke this, then define it in your '_.vimrc_' by, for example:
 
     nmap <Leader>G <Plug>CtrlPGazetteer
 
+Configuration
+-------------
+
+If ctags isn't in your $PATH, use this to set its location:
+
+    let g:ctrlp_gazetteer_ctags_bin = ''
+
+Use this to set the arguments for ctags, jsctags... for a given filetype:
+
+    let g:ctrlp_gazetteer_types = ''
+
+Examples:
+
+    let g:ctrlp_gazetteer_types = {
+      \ 'cuda'     : '--language-force=c++',
+      \ 'javascript' : {
+      \   'bin': 'jsctags',
+      \   'args': '-f -',
+      \   },
+      \ }
+
 License
 -------
 

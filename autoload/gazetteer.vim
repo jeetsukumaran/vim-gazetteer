@@ -7,6 +7,34 @@ let s:scope_resolution_operator_map = {
             \ "python" : "."
             \ }
 
+if exists('g:ctrlp_gazetteer_ctags_bin') && g:ctrlp_gazetteer_ctags_bin != ''
+    let s:bin = g:ctrlp_gazetteer_ctags_bin
+else
+    let s:bin = 'ctags'
+endif
+
+let s:types = {
+            \ 'aspperl': '%sasp',
+            \ 'aspvbs' : '%sasp',
+            \ 'cpp'    : '%sc++',
+            \ 'cs'     : '%sc#',
+            \ 'cuda'   : '%sc++',
+            \ 'expect' : '%stcl',
+            \ 'csh'    : '%ssh',
+            \ 'zsh'    : '%ssh',
+            \ 'slang'  : '%sslang',
+            \ }
+
+cal map(s:types, 'printf(v:val, " --language-force=")')
+
+if executable('jsctags')
+    cal extend(s:types, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
+endif
+
+if exists('g:ctrlp_gazetteer_types')
+    cal extend(s:types, g:ctrlp_gazetteer_types)
+endif
+
 " Adds a buffer variable, 'b:gazetteer_tags' that is a list of tuples, with
 " the first element being the line number of a tag and the second element the
 " tag definition
@@ -21,12 +49,17 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
             let file = bufname(target_buf_num)
             let istmpfile = 0
         endif
-        let cmdline = 'ctags -f - --fields=ks --excmd=num -u --language-force='
-        if getbufvar(target_buf_num, "&filetype") == 'cpp'
-            let cmdline .= 'c++'
-        else
-            let cmdline .= getbufvar(target_buf_num, "&filetype")
+
+        let [ags, ft] = ['-f - --fields=ks --excmd=num -u', getbufvar(target_buf_num, "&filetype")]
+        if type(s:types[ft]) == 1
+            let ags .= s:types[ft]
+            let bin = s:bin
+        elseif type(s:types[ft]) == 4
+            let ags = s:types[ft]['args']
+            let bin = expand(s:types[ft]['bin'], 1)
         endif
+
+        let cmdline = bin . ' ' . ags
         let scope_resolution_operator = get(s:scope_resolution_operator_map, getbufvar(target_buf_num, "&filetype"), "::")
         " if exists("b:gazetteer_ctags_opts")
         "     let cmdline .= " ".shellescape(b:gazetteer_ctags_opts)
@@ -58,12 +91,15 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
                 if (kind == "" || kind == "c" || kind == "f" || kind == "g" || kind == "m" || kind == "s" || kind == "u")
                     let tag = a[0]
                     if len(a) > 4
-                        let scope = substitute(a[4], '^[^:]*:', '', '')
-                        let scopes = split(scope, "::")
-                        if len(scopes) > 2
-                            call remove(scopes, -2, -1)
+                        let scope_type = substitute(a[4], ':.*$', '', '')
+                        if (scope_type == "namespace" || scope_type == "class" || scope_type == "struct" || scope_type == "enum" || scope_type == "union")
+                            let scope = substitute(a[4], '^[^:]*:', '', '')
+                            let scopes = split(scope, "::")
+                            if len(scopes) > 2
+                                call remove(scopes, -2, -1)
+                            endif
+                            let tag = join(scopes, scope_resolution_operator).scope_resolution_operator.tag
                         endif
-                        let tag = join(scopes, scope_resolution_operator).scope_resolution_operator.tag
                     endif
                     call add(gazetteer_tags, [substitute(a[2], ';"', '', ''), tag])
                 endif
