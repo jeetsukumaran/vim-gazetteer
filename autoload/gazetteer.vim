@@ -151,6 +151,7 @@ function! gazetteer#GazetteerEchoLocation()
     else
         let response = tag_name . " (" . file_loc . ")"
     endif
+    redraw
     echo response
 endfunction
 
