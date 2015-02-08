@@ -19,6 +19,6 @@ if ( (!exists("g:gazetteer_suppress_keymaps") || !g:gazetteer_suppress_keymaps) 
         nmap gG <Plug>GazetteerEchoLocation
     endif
     if !hasmapto("<Plug>CtrlPGazetteer", "n")
-        nmap g. <Plug>CtrlPGazetteer
+        nmap gz <Plug>CtrlPGazetteer
     endif
 endif

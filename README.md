@@ -7,7 +7,7 @@ Typing '``gG``' will echo the (scoped) name of the function, method, class, etc.
 of the current cursor position.
 
 If the [Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
-[Vim](http://www.vim.org)  is installed, then typing '``g.``' or the command
+[Vim](http://www.vim.org)  is installed, then typing '``gz``' or the command
 '``CtrlPGazetteer``' will invoke fuzzy-finding-and-jumping for tags of the
 current buffer.
 
@@ -67,7 +67,7 @@ then define it in your '_.vimrc_'  by, for example:
 
     nmap <Leader>g <Plug>GazetteerEchoLocation
 
-By default, typing '``g@``' will invoke
+By default, typing '``gz``' will invoke
 [Ctrl-P](https://github.com/kien/ctrlp.vim) to search for and, if selected, go
 to, tags in the current buffer. If you want to use another key-mapping to
 invoke this, then define it in your '_.vimrc_' by, for example:
