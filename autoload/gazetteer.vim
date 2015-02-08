@@ -13,27 +13,40 @@ else
     let s:bin = 'ctags'
 endif
 
-let s:types = {
-            \ 'aspperl': '%sasp',
-            \ 'aspvbs' : '%sasp',
-            \ 'cpp'    : '%sc++',
-            \ 'cs'     : '%sc#',
-            \ 'cuda'   : '%sc++',
-            \ 'expect' : '%stcl',
-            \ 'csh'    : '%ssh',
-            \ 'zsh'    : '%ssh',
-            \ 'slang'  : '%sslang',
+let s:ft_to_language_map = {
+            \ 'aspperl': '--language-force=asp',
+            \ 'aspvbs' : '--language-force=asp',
+            \ 'cpp'    : '--language-force=c++',
+            \ 'cs'     : '--language-force=c#',
+            \ 'cuda'   : '--language-force=c++',
+            \ 'expect' : '--language-force=tcl',
+            \ 'csh'    : '--language-force=sh',
+            \ 'zsh'    : '--language-force=sh',
+            \ 'slang'  : '--language-force=slang',
             \ }
 
-cal map(s:types, 'printf(v:val, " --language-force=")')
-
 if executable('jsctags')
-    cal extend(s:types, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
+    call extend(s:ft_to_language_map, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
 endif
 
 if exists('g:ctrlp_gazetteer_types')
-    cal extend(s:types, g:ctrlp_gazetteer_types)
+    call extend(s:ft_to_language_map, g:ctrlp_gazetteer_types)
 endif
+
+function! s:_get_tag_generation_cmd(target_buf_num)
+    let ags = '-f - --fields=ks --excmd=num -u'
+    let ft = getbufvar(a:target_buf_num, "&filetype")
+    let lang_for_ft = get(s:ft_to_language_map, ft, ft)
+    if type(lang_for_ft) == 1
+        let ags .= " " . lang_for_ft
+        let bin = s:bin
+    elseif type(lang_for_ft) == 4
+        let ags = " " . lang_for_ft['args']
+        let bin = expand(lang_for_ft['bin'], 1)
+    endif
+    let cmdline = bin . ' ' . ags
+    return cmdline
+endfunction
 
 " Adds a buffer variable, 'b:gazetteer_tags' that is a list of tuples, with
 " the first element being the line number of a tag and the second element the
@@ -49,17 +62,7 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
             let file = bufname(target_buf_num)
             let istmpfile = 0
         endif
-
-        let [ags, ft] = ['-f - --fields=ks --excmd=num -u', getbufvar(target_buf_num, "&filetype")]
-        if type(s:types[ft]) == 1
-            let ags .= s:types[ft]
-            let bin = s:bin
-        elseif type(s:types[ft]) == 4
-            let ags = s:types[ft]['args']
-            let bin = expand(s:types[ft]['bin'], 1)
-        endif
-
-        let cmdline = bin . ' ' . ags
+        let cmdline = s:_get_tag_generation_cmd(target_buf_num)
         let scope_resolution_operator = get(s:scope_resolution_operator_map, getbufvar(target_buf_num, "&filetype"), "::")
         " if exists("b:gazetteer_ctags_opts")
         "     let cmdline .= " ".shellescape(b:gazetteer_ctags_opts)
