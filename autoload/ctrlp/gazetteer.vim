@@ -52,6 +52,7 @@ function! ctrlp#gazetteer#init(buf_num)
     call add(s:gazetteer_ctrlp_tag_list, entry)
     let s:gazetteer_ctrlp_tag_map[entry] = item[0]
   endfor
+	cal s:syntax()
   return s:gazetteer_ctrlp_tag_list
 endfunction
 
@@ -95,6 +96,13 @@ function! ctrlp#gazetteer#gazetteer(word)
       let g:ctrlp_default_input = default_input_save
     endif
   endtry
+endfunction
+
+function! s:syntax()
+  syn match GazetteerDirectory '>\?\zs.\+/\ze.\+$'
+  syn match GazetteerFile '>\?\zs[^/]*\ze$'
+  hi link GazetteerDirectory Type
+  hi link GazetteerFile Function
 endfunction
 
 

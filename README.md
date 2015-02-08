@@ -6,7 +6,7 @@ Semantic location information for [Vim](http://www.vim.org).
 Typing '``gG``' will echo the (scoped) name of the function, method, class, etc.
 of the current cursor position.
 
-If the [Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
+If the [Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) fuzzy-finder plugin for
 [Vim](http://www.vim.org)  is installed, then typing '``gz``' or the command
 '``CtrlPGazetteer``' will invoke fuzzy-finding-and-jumping for tags of the
 current buffer.
@@ -19,11 +19,11 @@ available on the system path.
 
 Optional Prerequisites
 ----------------------
-[Ctrl-P](https://github.com/kien/ctrlp.vim) to enable fuzzy-searching and
+[Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) to enable fuzzy-searching and
 navigation of buffer tags.
 _Gazetteer_ also provides an extension for the
-[Ctrl-P](https://github.com/kien/ctrlp.vim) fuzzy-finder plugin for
-[Vim](http://www.vim.org).  [Ctrl-P](https://github.com/kien/ctrlp.vim) ships
+[Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) fuzzy-finder plugin for
+[Vim](http://www.vim.org).  [Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) ships
 with a tag finder built-in, but this requires external management of a tags
 file. _Gazetteer_ avoids this by implementing dynamic, on-demand
 buffer-specific tag generation.
@@ -53,7 +53,7 @@ Windows: _vimfiles_).
 Activating the Ctrl-P Extension
 -------------------------------
 
-To enable the [Ctrl-P](https://github.com/kien/ctrlp.vim) extension, add
+To enable the [Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) extension, add
 *gazetteer* to the variable `g:ctrlp_extensions` in your _.vimrc_:
 
     let g:ctrlp_extensions = ['gazetteer']
@@ -68,7 +68,7 @@ then define it in your '_.vimrc_'  by, for example:
     nmap <Leader>g <Plug>GazetteerEchoLocation
 
 By default, typing '``gz``' will invoke
-[Ctrl-P](https://github.com/kien/ctrlp.vim) to search for and, if selected, go
+[Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim) to search for and, if selected, go
 to, tags in the current buffer. If you want to use another key-mapping to
 invoke this, then define it in your '_.vimrc_' by, for example:
 
