@@ -76,17 +76,11 @@ endif
 "     call extend(s:ft_to_language_map, { 'pandoc': { 'args': '-f -', 'bin': 'markdown2ctags.py' } })
 " endif
 
-" /^#+[ \t](.*$)/\1/h,heading,headings/
-" --regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
-" --regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
-" --regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
-" let s:_markdownlike_ctags = " --langdef=markdown"
-" let s:_markdownlike_ctags .= " --regex-markdown='" . '/^#[ \t]+(.*)/\1/n,Heading_L1/' . "'"
-" let s:_markdownlike_ctags .= " --regex-markdown='" . '/^##[ \t]+(.*)/\1/c,Heading_L2/' . "'"
-" let s:_markdownlike_ctags .= " --regex-markdown='" . '/^###[ \t]+(.*)/\1/m,Heading_L3/' . "'"
-" let s:_markdownlike_ctags .= " --language-force=markdown "
 let s:_markdownlike_ctags = " --langdef=markdown"
-let s:_markdownlike_ctags .= " --regex-markdown='" . '/^#+[ \t]+(.*)/\1/c,heading/' . "'"
+let s:_markdownlike_ctags .= " --regex-markdown='" . '/^#[[:space:]]*([^#].+)$/\1/s,section/' . "'"
+let s:_markdownlike_ctags .= " --regex-markdown='" . '/^##[[:space:]]*([^#].+)$/\1/s,subsection/' . "'"
+let s:_markdownlike_ctags .= " --regex-markdown='" . '/^###[[:space:]]*([^#].+)$/\1/s,subsubsection/' . "'"
+let s:_markdownlike_ctags .= " --regex-markdown='" . '/^####[[:space:]]*([^#].+)$/\1/s,subsubsubsection/' . "'"
 let s:_markdownlike_ctags .= " --language-force=markdown "
 let s:ft_to_language_map["markdown"] = s:_markdownlike_ctags
 let s:ft_to_language_map["pandoc"] = s:_markdownlike_ctags
@@ -107,7 +101,7 @@ function! s:_get_tag_generation_cmd(target_buf_num)
         let bin = expand(lang_for_ft['bin'], 1)
     endif
     let cmdline = bin . ' ' . ags
-    echomsg cmdline
+    " echomsg cmdline
     return cmdline
 endfunction
 
@@ -155,7 +149,7 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
                 " u  union names
                 " v  variable definitions
                 " x  external and forward variable declarations
-                if (kind == "" || kind == "c" || kind == "f" || kind == "g" || kind == "m" || kind == "s" || kind == "u")
+                if (kind == "" || kind == "c" || kind == "f" || kind == "g" || kind == "m" || kind == "s" || kind == "u" || kind == "s")
                     let tag = a[0]
                     if len(a) > 4
                         let scope_type = substitute(a[4], ':.*$', '', '')
