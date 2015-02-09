@@ -71,6 +71,11 @@ if executable('jsctags')
     call extend(s:ft_to_language_map, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
 endif
 
+if executable('markdown2ctags.py')
+    call extend(s:ft_to_language_map, { 'markdown': { 'args': '-f -', 'bin': 'markdown2ctags.py' } })
+    call extend(s:ft_to_language_map, { 'pandoc': { 'args': '-f -', 'bin': 'markdown2ctags.py' } })
+endif
+
 if exists('g:ctrlp_gazetteer_types')
     call extend(s:ft_to_language_map, g:ctrlp_gazetteer_types)
 endif
