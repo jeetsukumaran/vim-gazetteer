@@ -118,8 +118,12 @@ function! s:syntax()
 		call ctrlp#hicheck('GazetteerBufName', 'Function')
 		call ctrlp#hicheck('GazetteerScope', 'Type')
 		call ctrlp#hicheck('GazetteerScopeSep', 'Comment')
-    execute "syn match GazetteerScope '"   . '>\?\zs.\+/\ze.\+'. s:gazetteer_entry_signature . "$' contains=GazetteerScopeSep"
-    execute "syn match GazetteerBufName '" . '>\?\zs[^/]*\ze'  . s:gazetteer_entry_signature . "$'"
+    " execute "syn match GazetteerEntry '"   . '>\?.\+'. s:gazetteer_entry_signature . "$' contains=GazetteerScope,GazetteerBufName,GazetteerScopeSep"
+    " execute "syn match GazetteerScope '"   . '>\?\zs.\+/\ze.\+'. s:gazetteer_entry_signature . "$' contained"
+    " execute "syn match GazetteerBufName '" . '>\?\zs[^/]*\ze'  . s:gazetteer_entry_signature . "$' contained"
+    execute "syn match GazetteerEntry '"   . '>\?\zs.\+\ze'. s:gazetteer_entry_signature . "$' contains=GazetteerScope,GazetteerBufName,GazetteerScopeSep"
+    syn match GazetteerScope '\zs.\+/\ze[^/]\+' contained contains=GazetteerScopeSep
+    syn match GazetteerBufName '/\zs[^/]\+\ze' contained
     if has("conceal")
       syn match GazetteerScopeSep '/' contained conceal cchar=»
       " syn match GazetteerScopeSep '/' contained conceal cchar=∋
@@ -129,6 +133,7 @@ function! s:syntax()
       " syn match GazetteerScopeSep '/' contained conceal cchar=§
       " syn match GazetteerScopeSep '/' contained conceal cchar=◦
       setlocal conceallevel=2
+      " setlocal concealcursor="nvic"
     endif
   endif
 endfunction
