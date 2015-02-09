@@ -58,7 +58,8 @@ function! ctrlp#gazetteer#init(buf_num)
     " below look for it. If this causes issues, we can
     " (a) drop support for syntax highlight,
     " (b) use some other decoration, e.g., trailing dashes
-    call add(s:gazetteer_ctrlp_tag_list, entry . s:gazetteer_entry_signature)
+    let entry .= s:gazetteer_entry_signature
+    call add(s:gazetteer_ctrlp_tag_list, entry)
     let s:gazetteer_ctrlp_tag_map[entry] = item[0]
   endfor
 	call s:syntax()
@@ -80,7 +81,7 @@ func! ctrlp#gazetteer#accept(mode, str)
   catch /E716:/
       redraw
       echohl WarningMsg
-      echomsg "Not found: " . l:term
+      echomsg "Not found: " . a:str
       echohl None
   endtry
 endfunc
