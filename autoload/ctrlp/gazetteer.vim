@@ -25,6 +25,7 @@ let g:loaded_ctrlp_gazetteer = 1
 let s:ctrlp_var = {
       \ 'init'  : 'ctrlp#gazetteer#init(s:crbufnr)',
       \ 'accept': 'ctrlp#gazetteer#accept',
+      \ 'exit'  : 'ctrlp#gazetteer#exit()',
       \ 'lname' : 'gazetteer',
       \ 'sname' : 'gazetteer',
       \ 'type'  : 'path',
@@ -40,6 +41,8 @@ else
   let g:ctrlp_ext_vars = [s:ctrlp_var]
 endif
 
+let s:gazetteer_entry_signature = "\t"
+
 " Provide a list of strings to search in
 "
 " Return: command
@@ -49,10 +52,16 @@ function! ctrlp#gazetteer#init(buf_num)
   let s:gazetteer_ctrlp_tag_map = {}
   for item in getbufvar(a:buf_num, "gazetteer_tags", [])
     let entry = substitute(item[1], '\(\.\|::\)', '/', 'g')
-    call add(s:gazetteer_ctrlp_tag_list, entry)
+    " Note the tab added to the end
+    " this hack is to allow the syntax matching to only apply to
+    " gazetteer entries. The syntax matching expressions
+    " below look for it. If this causes issues, we can
+    " (a) drop support for syntax highlight,
+    " (b) use some other decoration, e.g., trailing dashes
+    call add(s:gazetteer_ctrlp_tag_list, entry . s:gazetteer_entry_signature)
     let s:gazetteer_ctrlp_tag_map[entry] = item[0]
   endfor
-	cal s:syntax()
+	call s:syntax()
   return s:gazetteer_ctrlp_tag_list
 endfunction
 
@@ -75,6 +84,12 @@ func! ctrlp#gazetteer#accept(mode, str)
       echohl None
   endtry
 endfunc
+
+function! ctrlp#gazetteer#exit()
+  " syn clear GazetteerScope
+  " syn clear GazetteerBufName
+  " syn clear GazetteerScopeSep
+endfunction!
 
 " Give the extension an ID
 let s:id = g:ctrlp_builtins + len(g:ctrlp_ext_vars)
@@ -99,10 +114,23 @@ function! ctrlp#gazetteer#gazetteer(word)
 endfunction
 
 function! s:syntax()
-  syn match GazetteerDirectory '>\?\zs.\+/\ze.\+$'
-  syn match GazetteerFile '>\?\zs[^/]*\ze$'
-  hi link GazetteerDirectory Type
-  hi link GazetteerFile Function
+	if !ctrlp#nosy()
+		call ctrlp#hicheck('GazetteerBufName', 'Function')
+		call ctrlp#hicheck('GazetteerScope', 'Type')
+		call ctrlp#hicheck('GazetteerScopeSep', 'Comment')
+    execute "syn match GazetteerScope '"   . '>\?\zs.\+/\ze.\+'. s:gazetteer_entry_signature . "$' contains=GazetteerScopeSep"
+    execute "syn match GazetteerBufName '" . '>\?\zs[^/]*\ze'  . s:gazetteer_entry_signature . "$'"
+    if has("conceal")
+      syn match GazetteerScopeSep '/' contained conceal cchar=»
+      " syn match GazetteerScopeSep '/' contained conceal cchar=∋
+      " syn match GazetteerScopeSep '/' contained conceal cchar=►
+      " syn match GazetteerScopeSep '/' contained conceal cchar=→
+      " syn match GazetteerScopeSep '/' contained conceal cchar=•
+      " syn match GazetteerScopeSep '/' contained conceal cchar=§
+      " syn match GazetteerScopeSep '/' contained conceal cchar=◦
+      setlocal conceallevel=2
+    endif
+  endif
 endfunction
 
 
