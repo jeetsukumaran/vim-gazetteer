@@ -77,20 +77,20 @@ endif
 "     call extend(s:ft_to_language_map, { 'pandoc': { 'args': '-f -', 'bin': 'markdown2ctags.py' } })
 " endif
 
-let s:_markdownlike_ctags = " --langdef=markdown"
-let s:_markdownlike_ctags .= " --regex-markdown='" . '/^#[[:space:]]*([^#].+)$/\1/s,section/' . "'"
-let s:_markdownlike_ctags .= " --regex-markdown='" . '/^##[[:space:]]*([^#].+)$/\1/s,subsection/' . "'"
-let s:_markdownlike_ctags .= " --regex-markdown='" . '/^###[[:space:]]*([^#].+)$/\1/s,subsubsection/' . "'"
-let s:_markdownlike_ctags .= " --regex-markdown='" . '/^####[[:space:]]*([^#].+)$/\1/s,subsubsubsection/' . "'"
-let s:_markdownlike_ctags .= " --language-force=markdown "
+let s:_markdownlike_ctags = " --langdef=gazetteer_markdown"
+let s:_markdownlike_ctags .= " --regex-gazetteer_markdown='" . '/^#[[:space:]]*([^#].+)$/\1/s,section/' . "'"
+let s:_markdownlike_ctags .= " --regex-gazetteer_markdown='" . '/^##[[:space:]]*([^#].+)$/\1/s,subsection/' . "'"
+let s:_markdownlike_ctags .= " --regex-gazetteer_markdown='" . '/^###[[:space:]]*([^#].+)$/\1/s,subsubsection/' . "'"
+let s:_markdownlike_ctags .= " --regex-gazetteer_markdown='" . '/^####[[:space:]]*([^#].+)$/\1/s,subsubsubsection/' . "'"
+let s:_markdownlike_ctags .= " --language-force=gazetteer_markdown "
 let s:ft_to_language_map["markdown"] = s:_markdownlike_ctags
 let s:ft_to_language_map["pandoc"] = s:_markdownlike_ctags
 
-let s:_rstats_ctags = " --langdef=R"
-let s:_rstats_ctags .= " --regex-R='" . '/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]function/\1/f,Functions/' . "'"
-let s:_rstats_ctags .= " --regex-R='" . '/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/' . "'"
-" let s:_rstats_ctags .= " --regex-R='" . '/[ \t]"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/v,FunctionVariables/' . "'"
-let s:_rstats_ctags .= " --language-force=R "
+let s:_rstats_ctags = " --langdef=gazetteer_R"
+let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]function/\1/f,Functions/' . "'"
+let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/' . "'"
+" let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/[ \t]"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/v,FunctionVariables/' . "'"
+let s:_rstats_ctags .= " --language-force=gazetteer_R "
 let s:ft_to_language_map["R"] = s:_rstats_ctags
 let s:ft_to_language_map["r"] = s:_rstats_ctags
 
@@ -134,7 +134,7 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
         "     let cmdline .= " ".shellescape(b:gazetteer_ctags_opts)
         " endif
         let cmdline .= " ".shellescape(file)
-        echomsg cmdline
+        " echomsg cmdline
         let gazetteer_tags = []
         for ctags_line in split(system(cmdline), '\n')
             let a = split(ctags_line, '\t')
