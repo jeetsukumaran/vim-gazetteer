@@ -51,7 +51,8 @@ function! ctrlp#gazetteer#init(buf_num)
   let s:gazetteer_ctrlp_tag_list = []
   let s:gazetteer_ctrlp_tag_map = {}
   for item in getbufvar(a:buf_num, "gazetteer_tags", [])
-    let entry = substitute(item[1], '\(\.\|::\)', '/', 'g')
+    " let entry = substitute(item[1], '\(\.\|::\)', '/', 'g')
+    let entry = item[1]
     " Note the tab added to the end
     " this hack is to allow the syntax matching to only apply to
     " gazetteer entries. The syntax matching expressions

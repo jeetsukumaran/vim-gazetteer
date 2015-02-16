@@ -4,7 +4,8 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:scope_resolution_operator_map = {
-            \ "python" : "."
+            \ "python" : ".",
+            \ "R" : "$"
             \ }
 
 if exists('g:ctrlp_gazetteer_ctags_bin') && g:ctrlp_gazetteer_ctags_bin != ''
@@ -85,6 +86,14 @@ let s:_markdownlike_ctags .= " --language-force=markdown "
 let s:ft_to_language_map["markdown"] = s:_markdownlike_ctags
 let s:ft_to_language_map["pandoc"] = s:_markdownlike_ctags
 
+let s:_rstats_ctags = " --langdef=R"
+let s:_rstats_ctags .= " --regex-R='" . '/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]function/\1/f,Functions/' . "'"
+let s:_rstats_ctags .= " --regex-R='" . '/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/' . "'"
+" let s:_rstats_ctags .= " --regex-R='" . '/[ \t]"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/v,FunctionVariables/' . "'"
+let s:_rstats_ctags .= " --language-force=R "
+let s:ft_to_language_map["R"] = s:_rstats_ctags
+let s:ft_to_language_map["r"] = s:_rstats_ctags
+
 if exists('g:ctrlp_gazetteer_types')
     call extend(s:ft_to_language_map, g:ctrlp_gazetteer_types)
 endif
@@ -125,7 +134,7 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
         "     let cmdline .= " ".shellescape(b:gazetteer_ctags_opts)
         " endif
         let cmdline .= " ".shellescape(file)
-        " echomsg cmdline
+        echomsg cmdline
         let gazetteer_tags = []
         for ctags_line in split(system(cmdline), '\n')
             let a = split(ctags_line, '\t')
@@ -159,7 +168,8 @@ function! gazetteer#BuildBufferTagIndex(buf_num)
                             if len(scopes) > 2
                                 call remove(scopes, -2, -1)
                             endif
-                            let tag = join(scopes, scope_resolution_operator).scope_resolution_operator.tag
+                            " let tag = join(scopes, scope_resolution_operator) . scope_resolution_operator . tag
+                            let tag = join(scopes, '/') . '/' .tag
                         endif
                     endif
                     call add(gazetteer_tags, [substitute(a[2], ';"', '', ''), tag])
