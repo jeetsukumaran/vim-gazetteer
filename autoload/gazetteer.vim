@@ -87,8 +87,8 @@ let s:ft_to_language_map["markdown"] = s:_markdownlike_ctags
 let s:ft_to_language_map["pandoc"] = s:_markdownlike_ctags
 
 let s:_rstats_ctags = " --langdef=gazetteer_R"
-let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]function/\1/f,Functions/' . "'"
-let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/' . "'"
+let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]*function/\1/f,Functions/' . "'"
+let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t]*[^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/' . "'"
 " let s:_rstats_ctags .= " --regex-gazetteer_R='" . '/[ \t]"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*(<-|=)[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/v,FunctionVariables/' . "'"
 let s:_rstats_ctags .= " --language-force=gazetteer_R "
 let s:ft_to_language_map["R"] = s:_rstats_ctags
